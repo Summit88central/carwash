@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, Info, MapPin, Clock, CreditCard, Wallet } from "lucide-react";
+import { ChevronLeft, Info, MapPin, Clock, CreditCard, Wallet, Car } from "lucide-react";
 import { mockBusinesses } from "@/data/mockDb";
 
 export default function BookPage({ params }: { params: { id: string } }) {
@@ -11,7 +11,11 @@ export default function BookPage({ params }: { params: { id: string } }) {
 
     const [selectedServiceId, setSelectedServiceId] = useState<string | null>(null);
     const [selectedTime, setSelectedTime] = useState<string>("");
+    const [selectedCar, setSelectedCar] = useState<string>("");
     const [paymentMethod, setPaymentMethod] = useState<"Online" | "In-Person">("Online");
+    
+    // Mock user cars
+    const myCars = ["VW Polo (Sedan)", "Toyota Hilux (Bakkie)"];
     
     // Dynamic Time Slots (Client-side to avoid SSR mismatch)
     const [timeSlots, setTimeSlots] = useState<string[]>([]);
@@ -42,12 +46,12 @@ export default function BookPage({ params }: { params: { id: string } }) {
         router.push(
             `/booking-confirmation?wash=${encodeURIComponent(wash.washName)}&service=${encodeURIComponent(
                 wash.pricelist.find(s => s.id === selectedServiceId)?.service || ""
-            )}&time=${encodeURIComponent(selectedTime)}&payment=${encodeURIComponent(paymentMethod)}`
+            )}&time=${encodeURIComponent(selectedTime)}&car=${encodeURIComponent(selectedCar)}&payment=${encodeURIComponent(paymentMethod)}`
         );
     };
 
     const handleConfirm = () => {
-        if (!selectedServiceId || !selectedTime) return;
+        if (!selectedServiceId || !selectedTime || !selectedCar) return;
         
         if (paymentMethod === "Online") {
             setShowPaySheet(true);
@@ -103,8 +107,48 @@ export default function BookPage({ params }: { params: { id: string } }) {
                 </div>
             </div>
 
-            {/* Select Service */}
+            {/* Select Car */}
             <div style={{ marginTop: 24 }}>
+                <h3 style={{ marginLeft: 24, marginBottom: 8, fontSize: 13, textTransform: "uppercase", color: "#86868b", letterSpacing: "0.04em", fontWeight: 600 }}>
+                    Select Vehicle
+                </h3>
+                <div style={{ background: "#ffffff", borderTop: "1px solid #e5e5ea", borderBottom: "1px solid #e5e5ea", paddingLeft: 24 }}>
+                    {myCars.map((car, i) => (
+                        <button
+                            key={car}
+                            onClick={() => setSelectedCar(car)}
+                            style={{
+                                width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
+                                padding: "16px 24px 16px 0", border: "none", background: "transparent",
+                                borderBottom: i === myCars.length - 1 ? "none" : "1px solid #e5e5ea",
+                                cursor: "pointer", fontFamily: "inherit", textAlign: "left",
+                            }}
+                        >
+                            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                                <div style={{ width: 28, height: 28, borderRadius: 6, background: "#f2f2f7", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                                    <Car size={16} color="#1d1d1f" />
+                                </div>
+                                <span style={{ fontSize: 17, color: "#1d1d1f", fontWeight: 500 }}>{car}</span>
+                            </div>
+                            <div style={{ 
+                                width: 24, height: 24, borderRadius: "50%", 
+                                border: `1.5px solid ${selectedCar === car ? "#0ea5e9" : "#c7c7cc"}`,
+                                background: selectedCar === car ? "#0ea5e9" : "transparent",
+                                display: "flex", alignItems: "center", justifyContent: "center"
+                            }}>
+                                {selectedCar === car && (
+                                    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                                        <path d="M1 5L4.5 8.5L11 1.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                )}
+                            </div>
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Select Service */}
+            <div style={{ marginTop: 32 }}>
                 <h3 style={{ marginLeft: 24, marginBottom: 8, fontSize: 13, textTransform: "uppercase", color: "#86868b", letterSpacing: "0.04em", fontWeight: 600 }}>
                     Select Service
                 </h3>
@@ -263,12 +307,12 @@ export default function BookPage({ params }: { params: { id: string } }) {
                 </div>
                 <button
                     onClick={handleConfirm}
-                    disabled={!selectedServiceId}
+                    disabled={!selectedServiceId || !selectedCar}
                     style={{
                         padding: "0 32px", height: 50, borderRadius: 25, border: "none",
-                        background: selectedServiceId ? "#0ea5e9" : "#f2f2f7", 
-                        color: selectedServiceId ? "#ffffff" : "#8e8e93",
-                        fontSize: 17, fontWeight: 600, cursor: selectedServiceId ? "pointer" : "not-allowed",
+                        background: (selectedServiceId && selectedCar) ? "#0ea5e9" : "#f2f2f7", 
+                        color: (selectedServiceId && selectedCar) ? "#ffffff" : "#8e8e93",
+                        fontSize: 17, fontWeight: 600, cursor: (selectedServiceId && selectedCar) ? "pointer" : "not-allowed",
                         transition: "background 0.2s", fontFamily: "inherit", letterSpacing: "-0.01em",
                         display: "flex", alignItems: "center", gap: 8
                     }}

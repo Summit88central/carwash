@@ -11,6 +11,7 @@ function ConfirmationContent() {
     const washName = searchParams.get("wash") || "Car Wash";
     const serviceName = searchParams.get("service") || "Service";
     const timeValue = searchParams.get("time") || "ASAP";
+    const carName = searchParams.get("car") || "Vehicle";
     const paymentMethod = searchParams.get("payment") || "Pay In-Person";
 
     return (
@@ -49,6 +50,10 @@ function ConfirmationContent() {
                     <div style={{ padding: "16px 0", borderBottom: "1px solid #e5e5ea", display: "flex", justifyContent: "space-between" }}>
                         <span style={{ color: "#86868b", fontSize: 15 }}>Service</span>
                         <span style={{ color: "#1d1d1f", fontSize: 15, fontWeight: 500 }}>{serviceName}</span>
+                    </div>
+                    <div style={{ padding: "16px 0", borderBottom: "1px solid #e5e5ea", display: "flex", justifyContent: "space-between" }}>
+                        <span style={{ color: "#86868b", fontSize: 15 }}>Vehicle</span>
+                        <span style={{ color: "#1d1d1f", fontSize: 15, fontWeight: 500 }}>{carName}</span>
                     </div>
                     <div style={{ padding: "16px 0", borderBottom: "1px solid #e5e5ea", display: "flex", justifyContent: "space-between" }}>
                         <span style={{ color: "#86868b", fontSize: 15 }}>Arrival Time</span>
