@@ -1,0 +1,172 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", sans-serif;
+  --color-brand: #16a34a;
+  --color-brand-light: #dcfce7;
+  --color-brand-mid: #4ade80;
+  --color-brand-dark: #14532d;
+}
+
+:root {
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-sans);
+  background: #ffffff;
+  color: #0f172a;
+  line-height: 1.5;
+  touch-action: manipulation;
+}
+
+/* ─────────────────────────────────────────────
+   LOADING SCREEN ANIMATIONS
+───────────────────────────────────────────── */
+
+/* Entrance fade for the whole screen */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Logo pulse */
+@keyframes logo-pop {
+  0%   { transform: scale(0.85); opacity: 0; }
+  60%  { transform: scale(1.04); opacity: 1; }
+  100% { transform: scale(1);    opacity: 1; }
+}
+
+/* ---- Car journey: enters from right, pauses, exits left ---- */
+/*
+  0%      → start far right (off screen)
+  22%     → settle inside bay (centered)
+  26–74%  → hold still inside bay (wash happens)
+  88%     → exit far left (off screen)
+  100%    → off screen (reset invisible)
+*/
+@keyframes car-drive {
+  0%   { transform: translateX(420px); }
+  22%  { transform: translateX(0px);  }
+  26%  { transform: translateX(0px);  }
+  74%  { transform: translateX(0px);  }
+  88%  { transform: translateX(-440px); }
+  100% { transform: translateX(-440px); }
+}
+
+/* Wheels spin continuously */
+@keyframes wheel-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Water curtain sweeps across the car in bay */
+@keyframes curtain-sweep {
+  0%   { transform: translateX(-110%); opacity: 0; }
+  30%  { opacity: 1; }
+  70%  { opacity: 1; }
+  100% { transform: translateX(110%);  opacity: 0; }
+}
+
+/* Water curtain appears only during wash phase (26%–74% of 4s = ~1.04s–2.96s) */
+@keyframes curtain-timing {
+  0%,   24% { opacity: 0; }
+  27%        { opacity: 1; }
+  72%        { opacity: 1; }
+  75%, 100%  { opacity: 0; }
+}
+
+/* Soap bubbles float up */
+@keyframes bubble-float {
+  0%   { transform: translateY(0)   scale(1);   opacity: 0.7; }
+  100% { transform: translateY(-60px) scale(0.6); opacity: 0;   }
+}
+
+/* Spray jets fan out */
+@keyframes spray-fan {
+  0%   { opacity: 0; transform: scaleY(0); }
+  20%  { opacity: 1; transform: scaleY(1); }
+  80%  { opacity: 1; transform: scaleY(1); }
+  100% { opacity: 0; transform: scaleY(0); }
+}
+
+/* Progress bar fill */
+@keyframes progress-fill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* Tagline cycling fade */
+@keyframes tagline-cycle {
+  0%,   14%, 100% { opacity: 0; transform: translateY(6px); }
+  17%,  30%       { opacity: 1; transform: translateY(0);   }
+  33%             { opacity: 0; transform: translateY(-6px); }
+}
+
+/* Bay door (arch) shimmer */
+@keyframes arch-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+  50%       { box-shadow: 0 0 18px 4px rgba(74,222,128,0.22); }
+}
+
+/* Shine stripe sweeping over car body */
+@keyframes car-shine {
+  0%   { left: -60%; opacity: 0; }
+  28%  { opacity: 0; }
+  34%  { opacity: 0.7; left: -60%; }
+  62%  { opacity: 0.7; left: 160%; }
+  66%  { opacity: 0; left: 165%; }
+  100% { opacity: 0; left: 165%; }
+}
+
+/* Droplets drip down */
+@keyframes drip {
+  0%   { transform: translateY(-4px); opacity: 1; }
+  100% { transform: translateY(28px); opacity: 0; }
+}
+
+/* Small spark */
+@keyframes spark {
+  0%   { transform: scale(0.5) rotate(0deg);   opacity: 1; }
+  100% { transform: scale(0)   rotate(180deg); opacity: 0; }
+}
+
+/* ─────────────────────────────────────────────
+   SKELETON ANIMATION
+───────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.skeleton-box {
+  background: #e5e5ea;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-box::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0, rgba(255, 255, 255, 0.4) 20%, rgba(255, 255, 255, 0.4) 60%, rgba(255, 255, 255, 0) 100%);
+  animation: shimmer 1.5s infinite;
+}
