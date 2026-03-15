@@ -3,7 +3,7 @@
 import { Suspense } from "react";
 import dynamic from "next/dynamic";
 import { mockBusinesses } from "@/data/mockDb";
-import { CalendarClock } from "lucide-react";
+import { CalendarClock, MapPin } from "lucide-react";
 
 const MapDisplay = dynamic(() => import("@/components/MapDisplay"), {
     ssr: false,
@@ -32,29 +32,30 @@ export default function BusinessDashboard() {
             }}
         >
             {/* Nav Header */}
-            <div style={{ background: "#ffffff", padding: "64px 24px 16px", borderBottom: "1px solid #e5e5ea", position: "sticky", top: 0, zIndex: 10 }}>
-                <h1 style={{ fontSize: 32, fontWeight: 700, color: "#1d1d1f", margin: 0, letterSpacing: "-0.02em" }}>
-                    Dashboard
-                </h1>
-                <p style={{ marginTop: 4, fontSize: 15, color: "#86868b", fontWeight: 500 }}>
-                    Welcome back, {business.ownerName}
-                </p>
+            <div style={{ background: "#ffffff", padding: "56px 24px 16px", borderBottom: "1px solid #e5e5ea", position: "sticky", top: 0, zIndex: 10, display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+                <div>
+                    <p style={{ margin: 0, fontSize: 13, color: "#86868b", textTransform: "uppercase", letterSpacing: "0.04em", fontWeight: 600 }}>
+                        Welcome back
+                    </p>
+                    <h1 style={{ fontSize: 32, fontWeight: 700, color: "#1d1d1f", margin: "2px 0 0", letterSpacing: "-0.02em" }}>
+                        {business.ownerName}
+                    </h1>
+                </div>
+                <div style={{ width: 44, height: 44, borderRadius: 22, background: "#1d1d1f", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 600, fontSize: 18 }}>
+                    {business.ownerName.charAt(0)}
+                </div>
             </div>
 
             {/* Business Info Cell */}
-            <div style={{ marginTop: 24, background: "#ffffff", padding: "16px 24px", borderTop: "1px solid #e5e5ea", borderBottom: "1px solid #e5e5ea" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                    <div>
-                        <h2 style={{ fontSize: 20, fontWeight: 600, color: "#1d1d1f", margin: 0, letterSpacing: "-0.01em" }}>
-                            {business.washName}
-                        </h2>
-                        <p style={{ margin: "4px 0 0", fontSize: 15, color: "#86868b" }}>
-                            {business.phone}
-                        </p>
-                    </div>
-                    <div style={{ width: 44, height: 44, borderRadius: 22, background: "#0ea5e915", color: "#0ea5e9", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 600, fontSize: 18 }}>
-                        {business.washName.charAt(0)}
-                    </div>
+            <div style={{ marginTop: 24, background: "#ffffff", padding: "20px 24px", borderTop: "1px solid #e5e5ea", borderBottom: "1px solid #e5e5ea" }}>
+                <h2 style={{ fontSize: 22, fontWeight: 700, color: "#1d1d1f", margin: 0, letterSpacing: "-0.01em" }}>
+                    {business.washName}
+                </h2>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10 }}>
+                    <div style={{ background: "#e5e5ea", padding: "4px 8px", borderRadius: 6, fontSize: 13, fontWeight: 600, color: "#1d1d1f" }}>Live</div>
+                    <p style={{ margin: 0, fontSize: 15, color: "#86868b", fontWeight: 500 }}>
+                        {business.phone}
+                    </p>
                 </div>
             </div>
 
@@ -103,15 +104,20 @@ export default function BusinessDashboard() {
                 Location
             </h3>
             <div style={{ marginTop: 8 }}>
-                <Suspense fallback={<div className="skeleton-box" style={{ height: 250, width: "100%", borderTop: "1px solid #e5e5ea", borderBottom: "1px solid #e5e5ea" }} />}>
-                    <MapDisplay 
-                        center={business.location} 
-                        markers={[{ id: business.id, ...business.location, title: business.washName }]} 
-                        zoom={14}
-                    />
-                </Suspense>
-                <div style={{ background: "#ffffff", padding: "12px 24px", borderBottom: "1px solid #e5e5ea" }}>
-                    <p style={{ margin: 0, fontSize: 15, color: "#1d1d1f" }}>{business.location.address}</p>
+                <div style={{ height: 250, width: "100%", position: "relative", borderTop: "1px solid #e5e5ea" }}>
+                    <Suspense fallback={<div className="skeleton-box" style={{ width: "100%", height: "100%" }} />}>
+                        <MapDisplay 
+                            center={business.location} 
+                            markers={[{ id: business.id, ...business.location, title: business.washName }]} 
+                            zoom={14}
+                        />
+                    </Suspense>
+                </div>
+                <div style={{ background: "#ffffff", padding: "16px 24px", borderBottom: "1px solid #e5e5ea", display: "flex", gap: 12, alignItems: "center" }}>
+                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#f2f2f7", display: "flex", alignItems: "center", justifyContent: "center"}}>
+                        <MapPin size={16} color="#1d1d1f" />
+                    </div>
+                    <span style={{ margin: 0, fontSize: 15, color: "#1d1d1f", fontWeight: 500 }}>{business.location.address}</span>
                 </div>
             </div>
 
